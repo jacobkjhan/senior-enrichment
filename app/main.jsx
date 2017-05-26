@@ -12,6 +12,9 @@ import CampusContainer from './containers/CampusContainer';
 import SidebarContainer from './containers/SidebarContainer';
 import StudentsContainer from './containers/StudentsContainer';
 import StudentContainer from './containers/StudentContainer';
+import {initCampus} from './reducers/campus-reducer';
+import {initStudent} from './reducers/student-reducer';
+// import bootstrap from 'bootstrap';
 
 const onAppEnter = () => {
   const campuses = axios.get('/api/campus');
@@ -20,19 +23,20 @@ const onAppEnter = () => {
   return Promise.all([campuses,students])
   .then(res => res.map(r => r.data))
   .then(([campuses, students]) => {
-    store.dispatch()
-    store.dispatch()
-  })
-}
+    store.dispatch(initCampus(campuses));
+    store.dispatch(initStudent(students));
+  });
+};
 
 render (
   <Provider store={store}>
   	<Router history={hashHistory}>
-  		<Route path="/" component={App}>
-  			<Route path="/campus" component={Campuses} />
-  			<Route path="/campus/:campusId" component={Campus} />
-  			<Route path="/student" component={Students} />
-  			<Route path="/student/:studentId" component={Student} /> 
+  		<Route path="/" component={App} onEnter={onAppEnter}>
+        <IndexRedirect to='/campus' />
+  			<Route path="/campus" component={CampusesContainer} />
+  			<Route path="/campus/:campusId" component={CampusContainer} />
+  			<Route path="/students" component={StudentsContainer} />
+  			{/*<Route path="/students/:studentId" component={StudentContainer} /> */}
   		</Route>
     </Router>
   </Provider>,

@@ -37,7 +37,7 @@ router.get('/:campusId', function (req, res){
 
 router.put('/:campusId', function (req, res, next){
 	req.campus.update(req.body)
-	.then(campus => res.status(200).json(playlist))
+	.then(campus => res.status(200).json(campus))
 	.catch(next);
 });
 
